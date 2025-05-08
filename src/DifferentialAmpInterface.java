@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -9,6 +11,9 @@ public class DifferentialAmpInterface extends JFrame {
     private JTextField r1Field;
     private JTextField r2Field;
     private JLabel resultLabel;
+    private AmpDifPanel backgroundPanel;
+    private double r1Value = 0.0; // Almacenar el valor calculado de R1
+    private double r2Value = 0.0; // Almacenar el valor calculado de R2
 
     public DifferentialAmpInterface() {
         setTitle("Calculadora de Amplificador Diferencial");
@@ -18,7 +23,7 @@ public class DifferentialAmpInterface extends JFrame {
         setLocationRelativeTo(null);
 
         // Panel con la imagen de fondo
-        AmpDifPanel backgroundPanel = new AmpDifPanel("resources/ampdif.png");
+        backgroundPanel = new AmpDifPanel("resources/ampdif.png");
         backgroundPanel.setLayout(new BorderLayout());
         add(backgroundPanel, BorderLayout.CENTER);
 
@@ -79,8 +84,15 @@ public class DifferentialAmpInterface extends JFrame {
             // Calcular
             amp.calcular();
 
-            // Mostrar resultado
-            resultLabel.setText(String.format("Resultado: R1 = %.1f Ω, R2 = %.1f Ω", amp.getR1(), amp.getR2()));
+            // Almacenar valores calculados
+            r1Value = amp.getR1();
+            r2Value = amp.getR2();
+
+            // Actualizar la etiqueta de resultado
+            resultLabel.setText(String.format("Resultado: R1 = %.1f Ω, R2 = %.1f Ω", r1Value, r2Value));
+
+            // Repintar el panel para mostrar los valores sobre la imagen
+            backgroundPanel.repaint();
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this,
                     "Por favor, ingrese valores numéricos válidos",
@@ -127,11 +139,51 @@ public class DifferentialAmpInterface extends JFrame {
             int xImage = (panelWidth - IMAGE_WIDTH) / 2; // Centrar horizontalmente
             int yImage = (panelHeight - IMAGE_HEIGHT - 150) / 2; // Centrar verticalmente, dejando espacio para controles
 
+            // Dibujar la imagen de fondo
             if (imageLoaded && backgroundImage != null) {
                 g.drawImage(backgroundImage, xImage, yImage, IMAGE_WIDTH, IMAGE_HEIGHT, this);
             } else {
                 g.setColor(Color.LIGHT_GRAY);
                 g.fillRect(0, 0, panelWidth, panelHeight);
+            }
+
+            // Dibujar los valores de las resistencias sobre la imagen
+            if (r1Value > 0 && r2Value > 0) {
+                g.setColor(Color.BLACK);
+                g.setFont(new Font("Arial", Font.BOLD, 20));
+
+                // Formatear los valores de resistencia
+                String r1Text = formatResistance(r1Value);
+                String r2Text = formatResistance(r2Value);
+
+                // Coordenadas para R1 y R2 (superiores)
+                int r1X = xImage + 140;  // R1 superior
+                int r1Y = yImage + 40;
+                int r2X = xImage + 380;  // R2 superior
+                int r2Y = yImage + 40;
+
+                // Coordenadas para R1' y R2' (inferiores)
+                int r1PrimeX = xImage + 140;  // R1' inferior, misma x que R1
+                int r1PrimeY = yImage + 220;  // Cerca de la parte inferior
+                int r2PrimeX = xImage + 380;  // R2' inferior, misma x que R2
+                int r2PrimeY = yImage + 220;  // Cerca de la parte inferior
+
+                // Dibujar los valores
+                g.drawString(r1Text, r1X, r1Y);          // R1 superior
+                g.drawString(r2Text, r2X, r2Y);          // R2 superior
+                g.drawString(r1Text, r1PrimeX, r1PrimeY); // R1' inferior
+                g.drawString(r2Text, r2PrimeX, r2PrimeY); // R2' inferior
+            }
+        }
+
+        // Método para formatear los valores de resistencia (e.g., 10000 → "10k Ω")
+        private String formatResistance(double resistance) {
+            if (resistance >= 1_000_000) {
+                return String.format("%.1fM Ω", resistance / 1_000_000);
+            } else if (resistance >= 1_000) {
+                return String.format("%.1fk Ω", resistance / 1_000);
+            } else {
+                return String.format("%.1f Ω", resistance);
             }
         }
     }
