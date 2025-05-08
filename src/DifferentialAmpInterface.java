@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 public class DifferentialAmpInterface extends JFrame {
     private JTextField ganDifField;
@@ -13,11 +15,17 @@ public class DifferentialAmpInterface extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
         setMinimumSize(new Dimension(400, 300));
-        setLocationRelativeTo(null); // Centrar la ventana
+        setLocationRelativeTo(null);
+
+        // Panel con la imagen de fondo
+        AmpDifPanel backgroundPanel = new AmpDifPanel("resources/ampdif.png");
+        backgroundPanel.setLayout(new BorderLayout());
+        add(backgroundPanel, BorderLayout.CENTER);
 
         // Panel para los controles de entrada
         JPanel inputPanel = new JPanel(new GridLayout(4, 2, 5, 5));
         inputPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        inputPanel.setOpaque(false); // Hacer el panel transparente para ver la imagen de fondo
 
         // Campos de entrada
         inputPanel.add(new JLabel("Ganancia Diferencial (ganDif):"));
@@ -41,7 +49,8 @@ public class DifferentialAmpInterface extends JFrame {
         resultLabel = new JLabel("Resultado: Ingrese valores y presione Calcular");
         inputPanel.add(resultLabel);
 
-        add(inputPanel, BorderLayout.CENTER);
+        // Añadir el panel de entrada en la parte inferior
+        backgroundPanel.add(inputPanel, BorderLayout.SOUTH);
 
         pack();
         setVisible(true);
@@ -82,6 +91,48 @@ public class DifferentialAmpInterface extends JFrame {
                     "Error: " + e.getMessage(),
                     "Error de Cálculo",
                     JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // Clase interna para el panel con la imagen de fondo
+    private class AmpDifPanel extends JPanel {
+        private Image backgroundImage;
+        private boolean imageLoaded;
+        private static final int IMAGE_WIDTH = 640;
+        private static final int IMAGE_HEIGHT = 340;
+
+        public AmpDifPanel(String imagePath) {
+            setPreferredSize(new Dimension(IMAGE_WIDTH, IMAGE_HEIGHT + 150)); // Ajustado para espacio de controles
+            try {
+                File imageFile = new File(imagePath);
+                if (!imageFile.exists()) {
+                    throw new IOException("El archivo de imagen no existe: " + imagePath);
+                }
+                backgroundImage = ImageIO.read(imageFile);
+                imageLoaded = true;
+            } catch (IOException e) {
+                imageLoaded = false;
+                JOptionPane.showMessageDialog(this,
+                        "Error al cargar la imagen: " + e.getMessage(),
+                        "Error de Imagen",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            int panelWidth = getWidth();
+            int panelHeight = getHeight();
+            int xImage = (panelWidth - IMAGE_WIDTH) / 2; // Centrar horizontalmente
+            int yImage = (panelHeight - IMAGE_HEIGHT - 150) / 2; // Centrar verticalmente, dejando espacio para controles
+
+            if (imageLoaded && backgroundImage != null) {
+                g.drawImage(backgroundImage, xImage, yImage, IMAGE_WIDTH, IMAGE_HEIGHT, this);
+            } else {
+                g.setColor(Color.LIGHT_GRAY);
+                g.fillRect(0, 0, panelWidth, panelHeight);
+            }
         }
     }
 }

@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 
 public class PassiveFilterInterface extends JFrame {
     private JComboBox<String> typeComboBox;
