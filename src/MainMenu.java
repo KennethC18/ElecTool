@@ -8,7 +8,7 @@ public class MainMenu extends JFrame {
         setTitle("Menú Principal - Herramientas Electrónicas");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
-        setSize(400, 300); // Aumentado para más botones
+        setSize(400, 350); // Aumentado para más botones
         setLocationRelativeTo(null); // Centrar la ventana
 
         // Panel central con un título
@@ -50,6 +50,16 @@ public class MainMenu extends JFrame {
             new PassiveFilterInterface();
         });
         centerPanel.add(passiveFilterButton);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Espacio
+
+        // Botón para abrir la calculadora de filtro activo
+        JButton activeFilterButton = new JButton("Calculadora de Filtro Activo");
+        activeFilterButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        activeFilterButton.addActionListener(e -> {
+            // Abrir la ventana de la calculadora de filtro activo
+            new ActiveFilterInterface();
+        });
+        centerPanel.add(activeFilterButton);
 
         // Añadir el panel al centro de la ventana
         add(centerPanel, BorderLayout.CENTER);
