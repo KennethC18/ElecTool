@@ -1,0 +1,44 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class MainMenu extends JFrame {
+    public MainMenu() {
+        // Configuración de la ventana principal
+        setTitle("Menú Principal - Herramientas Electrónicas");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+        setSize(400, 200);
+        setLocationRelativeTo(null); // Centrar la ventana
+
+        // Panel central con un título
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        JLabel titleLabel = new JLabel("Seleccione una Herramienta");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centerPanel.add(titleLabel);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 20))); // Espacio
+
+        // Botón para abrir la calculadora de resistencias
+        JButton resistorButton = new JButton("Calculadora de Resistencias por Colores");
+        resistorButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        resistorButton.addActionListener(e -> {
+            // Abrir la ventana de la calculadora de resistencias
+            new ResistorInterface();
+        });
+        centerPanel.add(resistorButton);
+
+        // Añadir el panel al centro de la ventana
+        add(centerPanel, BorderLayout.CENTER);
+
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        // Ejecutar el menú principal en el Event Dispatch Thread
+        SwingUtilities.invokeLater(() -> new MainMenu());
+    }
+}

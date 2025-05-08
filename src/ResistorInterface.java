@@ -9,7 +9,7 @@ public class ResistorInterface extends JFrame {
 
     public ResistorInterface() {
         setTitle("Calculadora de Resistencias");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Cambiado para no cerrar la app
         setLayout(new BorderLayout());
 
         // Crear el panel de la resistencia con la imagen de fondo
@@ -167,10 +167,5 @@ public class ResistorInterface extends JFrame {
             case "Ninguno": return "20%";
             default: return "0%";
         }
-    }
-
-    public static void main(String[] args) {
-        // Ejecutar la interfaz en el Event Dispatch Thread
-        SwingUtilities.invokeLater(() -> new ResistorInterface());
     }
 }
