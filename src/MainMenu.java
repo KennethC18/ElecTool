@@ -8,7 +8,7 @@ public class MainMenu extends JFrame {
         setTitle("Menú Principal - Herramientas Electrónicas");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
-        setSize(400, 200);
+        setSize(400, 250); // Aumentado para más botones
         setLocationRelativeTo(null); // Centrar la ventana
 
         // Panel central con un título
@@ -30,6 +30,16 @@ public class MainMenu extends JFrame {
             new ResistorInterface();
         });
         centerPanel.add(resistorButton);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Espacio
+
+        // Botón para abrir la calculadora de amplificador diferencial
+        JButton diffAmpButton = new JButton("Calculadora de Amplificador Diferencial");
+        diffAmpButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        diffAmpButton.addActionListener(e -> {
+            // Abrir la ventana de la calculadora de amplificador diferencial
+            new DifferentialAmpInterface();
+        });
+        centerPanel.add(diffAmpButton);
 
         // Añadir el panel al centro de la ventana
         add(centerPanel, BorderLayout.CENTER);
