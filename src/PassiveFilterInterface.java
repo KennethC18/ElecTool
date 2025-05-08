@@ -11,6 +11,8 @@ public class PassiveFilterInterface extends JFrame {
     private JTextField cField;
     private JLabel resultLabel;
     private PassiveFilterPanel backgroundPanel;
+    private double rValue = 0.0; // Almacenar el valor calculado de R
+    private double cValue = 0.0; // Almacenar el valor calculado de C
 
     public PassiveFilterInterface() {
         setTitle("Calculadora de Filtro Pasivo");
@@ -83,7 +85,15 @@ public class PassiveFilterInterface extends JFrame {
 
             filter.calcular();
 
-            resultLabel.setText(String.format("Resultado: R = %.1f Ω, C = %.3e F", filter.getR(), filter.getC()));
+            // Almacenar valores calculados
+            rValue = filter.getR();
+            cValue = filter.getC();
+
+            // Actualizar la etiqueta de resultado
+            resultLabel.setText(String.format("Resultado: R = %.1f Ω, C = %.3e F", rValue, cValue));
+
+            // Repintar el panel para mostrar los valores sobre la imagen
+            backgroundPanel.repaint();
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this,
                     "Por favor, ingrese valores numéricos válidos",
@@ -140,11 +150,61 @@ public class PassiveFilterInterface extends JFrame {
             int xImage = (panelWidth - IMAGE_WIDTH) / 2; // Centrar horizontalmente
             int yImage = (panelHeight - IMAGE_HEIGHT - 150) / 2; // Centrar verticalmente, dejando espacio para controles
 
+            // Dibujar la imagen de fondo
             if (imageLoaded && backgroundImage != null) {
                 g.drawImage(backgroundImage, xImage, yImage, IMAGE_WIDTH, IMAGE_HEIGHT, this);
             } else {
                 g.setColor(Color.LIGHT_GRAY);
                 g.fillRect(0, 0, panelWidth, panelHeight);
+            }
+
+            // Dibujar los valores de R y C sobre la imagen
+            if (rValue > 0 && cValue > 0) {
+                g.setColor(Color.BLACK);
+                g.setFont(new Font("Arial", Font.BOLD, 20));
+
+                // Formatear los valores
+                String rText = formatResistance(rValue);
+                String cText = formatCapacitance(cValue);
+
+                // Determinar posiciones según el tipo de filtro
+                String filterType = (String) typeComboBox.getSelectedItem();
+                int upperLeftX = xImage + 140;  // Cuadrante superior izquierdo
+                int upperLeftY = yImage + 180;
+                int rightCenterX = xImage + 360; // Centro del lado derecho
+                int rightCenterY = yImage + 240;
+
+                if (filterType.equals("Pasa Bajas (L_P)")) {
+                    // R en cuadrante superior izquierdo, C en centro del lado derecho
+                    g.drawString(rText, upperLeftX, upperLeftY);
+                    g.drawString(cText, rightCenterX, rightCenterY);
+                } else {
+                    // C en cuadrante superior izquierdo, R en centro del lado derecho
+                    g.drawString(cText, upperLeftX, upperLeftY);
+                    g.drawString(rText, rightCenterX, rightCenterY);
+                }
+            }
+        }
+
+        // Formatear resistencia (e.g., 10000 → "10k Ω")
+        private String formatResistance(double resistance) {
+            if (resistance >= 1_000_000) {
+                return String.format("%.1fM Ω", resistance / 1_000_000);
+            } else if (resistance >= 1_000) {
+                return String.format("%.1fk Ω", resistance / 1_000);
+            } else {
+                return String.format("%.1f Ω", resistance);
+            }
+        }
+
+        // Formatear capacitancia (e.g., 1.592e-5 → "15.9µF")
+        private String formatCapacitance(double capacitance) {
+            if (capacitance < 1e-6) {
+                return String.format("%.1fnF", capacitance * 1e9);
+            } else if (capacitance < 1e-3) {
+                return String.format("%.1fµF", capacitance * 1e6);
+            } else {
+                return String.format("%.1fmF", capacitance * 1e3);
             }
         }
     }
