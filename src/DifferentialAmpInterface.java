@@ -5,7 +5,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-
 import javax.imageio.ImageIO;
 
 public class DifferentialAmpInterface extends JFrame {
@@ -118,7 +117,7 @@ public class DifferentialAmpInterface extends JFrame {
         public AmpDifPanel(String imagePath) {
             setPreferredSize(new Dimension(IMAGE_WIDTH, IMAGE_HEIGHT + 150)); // Ajustado para espacio de controles
             try {
-            	InputStream imageFile = ResourceLoader.load(imagePath);
+                InputStream imageFile = ResourceLoader.load(imagePath);
                 if (imageFile == null) {
                     throw new IOException("El archivo de imagen no existe: " + imagePath);
                 }

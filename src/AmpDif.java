@@ -4,13 +4,10 @@ public class AmpDif implements Calculador {
     private Double R2;
 
     public AmpDif() {
-        // ganDif=1, R1=10kΩ por defecto
         this(1.0, 10000.0, null);
     }
     
-    public AmpDif(double ganDif,
-                   Double R1,
-                   Double R2) {
+    public AmpDif(double ganDif, Double R1, Double R2) {
         if (ganDif < 0)
             throw new IllegalArgumentException("ganDif ≥ 0");
         if (R1 == null && R2 == null)
@@ -22,7 +19,6 @@ public class AmpDif implements Calculador {
 
     @Override
     public void calcular() throws ExcepcionCalculo {
-        // ganDif = R2/R1
         if (R1 != null) {
             R2 = ganDif * R1;
         } else {

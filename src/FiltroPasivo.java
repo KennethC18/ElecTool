@@ -5,10 +5,8 @@ public class FiltroPasivo implements Calculador {
     private Double C;
     
     public FiltroPasivo() {
-    	// LP @1kHz, R=10kΩ por defecto
-		this(TipoFiltroPasivo.L_P, 1000.0, 10000.0, null);
+        this(TipoFiltroPasivo.L_P, 1000.0, 10000.0, null);
     }
-
 
     public FiltroPasivo(TipoFiltroPasivo tipo, double frecCort, Double R, Double C) {
         if (frecCort <= 0) throw new IllegalArgumentException("frecCort > 0");
@@ -22,7 +20,6 @@ public class FiltroPasivo implements Calculador {
 
     @Override
     public void calcular() throws ExcepcionCalculo {
-        // frecCort = 1/(2π·R·C)
         if (R != null) {
             C = 1.0 / (2 * Math.PI * R * frecCort);
         } else {

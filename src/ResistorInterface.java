@@ -1,71 +1,62 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 
 public class ResistorInterface extends JFrame {
     private ResistorPanel resistorPanel;
     private JComboBox<String>[] comboBoxes = new JComboBox[4];
-    private JLabel resistanceLabel; // JLabel para mostrar la resistencia equivalente
+    private JLabel resistanceLabel;
 
     public ResistorInterface() {
         setTitle("Calculadora de Resistencias");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Cambiado para no cerrar la app
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // Crear el panel de la resistencia con la imagen de fondo
-        resistorPanel = new ResistorPanel("resources/resistor.png");
+        resistorPanel = new ResistorPanel("resistor.png");
         add(resistorPanel, BorderLayout.CENTER);
 
-        // Panel para los controles
-        JPanel controlPanel = new JPanel(new GridLayout(5, 2, 5, 5)); // 5 filas para incluir la resistencia
+        JPanel controlPanel = new JPanel(new GridLayout(5, 2, 5, 5));
         controlPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
-        // Definir los colores posibles para cada banda
         String[] coloresDigitos = {"Negro", "Marrón", "Rojo", "Naranja", "Amarillo", "Verde", "Azul", "Violeta", "Gris", "Blanco"};
         String[] coloresMultiplicador = {"Negro", "Marrón", "Rojo", "Naranja", "Amarillo", "Verde", "Azul", "Violeta", "Gris", "Blanco", "Oro", "Plata"};
         String[] coloresTolerancia = {"Marrón", "Rojo", "Verde", "Azul", "Violeta", "Gris", "Oro", "Plata", "Ninguno"};
 
-        // Inicializar el JLabel para la resistencia equivalente
         controlPanel.add(new JLabel("Resistencia:"));
-        resistanceLabel = new JLabel("0 Ω ± 0%"); // Valor inicial
+        resistanceLabel = new JLabel("0 Ω ± 0%");
         controlPanel.add(resistanceLabel);
 
-        // Inicializar los JComboBox
-        comboBoxes[0] = new JComboBox<>(coloresDigitos);    // Banda 1: Dígito
-        comboBoxes[1] = new JComboBox<>(coloresDigitos);    // Banda 2: Dígito
-        comboBoxes[2] = new JComboBox<>(coloresMultiplicador); // Banda 3: Multiplicador
-        comboBoxes[3] = new JComboBox<>(coloresTolerancia); // Banda 4: Tolerancia
+        comboBoxes[0] = new JComboBox<>(coloresDigitos);
+        comboBoxes[1] = new JComboBox<>(coloresDigitos);
+        comboBoxes[2] = new JComboBox<>(coloresMultiplicador);
+        comboBoxes[3] = new JComboBox<>(coloresTolerancia);
 
-        // Configurar los controles y asociarlos a las bandas
         for (int i = 0; i < 4; i++) {
             controlPanel.add(new JLabel("Banda " + (i + 1) + ":"));
             controlPanel.add(comboBoxes[i]);
-            comboBoxes[i].setSelectedIndex(0); // Seleccionar el primer color por defecto
+            comboBoxes[i].setSelectedIndex(0);
         }
 
-        // Añadir los ActionListener después de establecer los índices iniciales
         for (int i = 0; i < 4; i++) {
             final int index = i;
             comboBoxes[i].addActionListener(e -> {
                 String selected = (String) comboBoxes[index].getSelectedItem();
                 Color color = getColorFromString(selected);
-                resistorPanel.setBandColor(index, color); // Actualizar color
-                updateResistanceLabel(); // Actualizar el valor de la resistencia
+                resistorPanel.setBandColor(index, color);
+                updateResistanceLabel();
             });
         }
 
         add(controlPanel, BorderLayout.SOUTH);
 
-        // Ajustar el tamaño de la ventana para acomodar la imagen y los controles
         pack();
-        setMinimumSize(new Dimension(850, 300)); // Aumentado para más espacio
-        setLocationRelativeTo(null); // Centrar la ventana
+        setMinimumSize(new Dimension(850, 300));
+        setLocationRelativeTo(null);
         setVisible(true);
 
-        // Actualizar la resistencia inicial
         updateResistanceLabel();
     }
 
-    // Método para convertir el nombre del color a un objeto Color
     private Color getColorFromString(String colorName) {
         switch (colorName) {
             case "Negro": return Color.BLACK;
@@ -85,24 +76,19 @@ public class ResistorInterface extends JFrame {
         }
     }
 
-    // Método para calcular y actualizar la resistencia equivalente
     private void updateResistanceLabel() {
-        // Obtener los colores seleccionados
         String banda1 = (String) comboBoxes[0].getSelectedItem();
         String banda2 = (String) comboBoxes[1].getSelectedItem();
         String multiplicador = (String) comboBoxes[2].getSelectedItem();
         String tolerancia = (String) comboBoxes[3].getSelectedItem();
 
-        // Calcular los valores numéricos
         int digito1 = getDigitValue(banda1);
         int digito2 = getDigitValue(banda2);
         double multiplicadorValor = getMultiplierValue(multiplicador);
         String toleranciaValor = getToleranceValue(tolerancia);
 
-        // Calcular la resistencia
         double resistencia = ((digito1 * 10) + digito2) * multiplicadorValor;
 
-        // Formatear el valor de la resistencia
         String resistenciaTexto;
         if (resistencia >= 1_000_000) {
             resistenciaTexto = String.format("%.2f MΩ", resistencia / 1_000_000);
@@ -112,11 +98,9 @@ public class ResistorInterface extends JFrame {
             resistenciaTexto = String.format("%.2f Ω", resistencia);
         }
 
-        // Actualizar el JLabel
         resistanceLabel.setText(resistenciaTexto + " ± " + toleranciaValor);
     }
 
-    // Método para obtener el valor numérico de un dígito
     private int getDigitValue(String color) {
         switch (color) {
             case "Negro": return 0;
@@ -133,7 +117,6 @@ public class ResistorInterface extends JFrame {
         }
     }
 
-    // Método para obtener el valor del multiplicador
     private double getMultiplierValue(String color) {
         switch (color) {
             case "Negro": return 1;
@@ -152,7 +135,6 @@ public class ResistorInterface extends JFrame {
         }
     }
 
-    // Método para obtener el valor de la tolerancia
     private String getToleranceValue(String color) {
         switch (color) {
             case "Marrón": return "1%";

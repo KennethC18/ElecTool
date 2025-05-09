@@ -7,8 +7,7 @@ public class FiltroActivo1erOrd implements Calculador {
     private Double R2;
     
     public FiltroActivo1erOrd() {
-    	// LP @1kHz, gan=2, R1=10kΩ por defecto
-    	this(TipoFiltroActivo.L_P, 1000.0, 2.0, 10000.0, null);
+        this(TipoFiltroActivo.L_P, 1000.0, 2.0, 10000.0, null);
     }
     
     public FiltroActivo1erOrd(TipoFiltroActivo tipo, double frecCort, double gan, Double R1, Double C) {
@@ -25,7 +24,6 @@ public class FiltroActivo1erOrd implements Calculador {
 
     @Override
     public void calcular() throws ExcepcionCalculo {
-        // frecCort = 1/(2π·R1·C)   y   gan = 1 + R2/R1 ⇒ R2 = (gan–1)·R1
         if (R1 != null) {
             C = 1.0 / (2 * Math.PI * R1 * frecCort);
         } else {

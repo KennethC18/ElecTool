@@ -3,7 +3,6 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-
 import javax.imageio.ImageIO;
 
 public class PassiveFilterInterface extends JFrame {
@@ -25,7 +24,6 @@ public class PassiveFilterInterface extends JFrame {
 
         // Panel con la imagen de fondo
         backgroundPanel = new PassiveFilterPanel("RClowpass.png");
-        
         backgroundPanel.setLayout(new BorderLayout());
         add(backgroundPanel, BorderLayout.CENTER);
 
@@ -92,7 +90,7 @@ public class PassiveFilterInterface extends JFrame {
             rValue = filter.getR();
             cValue = filter.getC();
 
-            // Actualizar la etiqueta de resultado
+            // Actualizar la etiqueta de resultado mota para el resultado
             resultLabel.setText(String.format("Resultado: R = %.1f Ω, C = %.3e F", rValue, cValue));
 
             // Repintar el panel para mostrar los valores sobre la imagen
@@ -124,7 +122,7 @@ public class PassiveFilterInterface extends JFrame {
 
         private void loadImage(String imagePath) {
             try {
-            	InputStream imageFile = ResourceLoader.load(imagePath);
+                InputStream imageFile = ResourceLoader.load(imagePath);
                 if (imageFile == null) {
                     throw new IOException("El archivo de imagen no existe: " + imagePath);
                 }
