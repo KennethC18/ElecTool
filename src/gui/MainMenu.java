@@ -1,10 +1,11 @@
+package gui;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 
 public class MainMenu extends JFrame {
     public MainMenu() {
-        setTitle("Menú Principal - Herramientas Electrónicas");
+        setTitle("Menú Principal - ElecTool");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         setSize(400, 350);
@@ -13,11 +14,17 @@ public class MainMenu extends JFrame {
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         centerPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
-        JLabel titleLabel = new JLabel("Seleccione una Herramienta");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        
+        JLabel titleLabel = new JLabel("ELECTOOL ");
+        titleLabel.setFont(new Font("Bauhaus 93", Font.ITALIC, 40));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         centerPanel.add(titleLabel);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+
+        JLabel subtitleLabel = new JLabel("Seleccione una Herramienta");
+        subtitleLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        subtitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centerPanel.add(subtitleLabel);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
         JButton resistorButton = new JButton("Calculadora de Resistencias por Colores");

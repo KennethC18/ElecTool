@@ -1,3 +1,6 @@
+package view;
+
+import util.ResourceLoader;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -8,7 +11,6 @@ public class ResistorPanel extends JPanel {
     private Image backgroundImage;
     private boolean imageLoaded;
     private Color[] bandColors = new Color[4];
-
     private static final int IMAGE_WIDTH = 800;
     private static final int IMAGE_HEIGHT = 180;
 

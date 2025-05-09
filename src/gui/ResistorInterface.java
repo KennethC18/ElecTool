@@ -1,6 +1,8 @@
+package gui;
+
+import view.ResistorPanel;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 
 public class ResistorInterface extends JFrame {
     private ResistorPanel resistorPanel;
