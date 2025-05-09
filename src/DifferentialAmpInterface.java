@@ -4,6 +4,8 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+
 import javax.imageio.ImageIO;
 
 public class DifferentialAmpInterface extends JFrame {
@@ -23,7 +25,7 @@ public class DifferentialAmpInterface extends JFrame {
         setLocationRelativeTo(null);
 
         // Panel con la imagen de fondo
-        backgroundPanel = new AmpDifPanel("resources/ampdif.png");
+        backgroundPanel = new AmpDifPanel("ampdif.png");
         backgroundPanel.setLayout(new BorderLayout());
         add(backgroundPanel, BorderLayout.CENTER);
 
@@ -116,8 +118,8 @@ public class DifferentialAmpInterface extends JFrame {
         public AmpDifPanel(String imagePath) {
             setPreferredSize(new Dimension(IMAGE_WIDTH, IMAGE_HEIGHT + 150)); // Ajustado para espacio de controles
             try {
-                File imageFile = new File(imagePath);
-                if (!imageFile.exists()) {
+            	InputStream imageFile = ResourceLoader.load(imagePath);
+                if (imageFile == null) {
                     throw new IOException("El archivo de imagen no existe: " + imagePath);
                 }
                 backgroundImage = ImageIO.read(imageFile);

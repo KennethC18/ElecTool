@@ -1,7 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+
 import javax.imageio.ImageIO;
 
 public class ResistorPanel extends JPanel {
@@ -25,8 +26,8 @@ public class ResistorPanel extends JPanel {
 
         // Intentar cargar la imagen
         try {
-            File imageFile = new File(imagePath);
-            if (!imageFile.exists()) {
+        	InputStream imageFile = ResourceLoader.load("resistor.png");
+            if (imageFile == null) {
                 throw new IOException("El archivo de imagen no existe: " + imagePath);
             }
             backgroundImage = ImageIO.read(imageFile);

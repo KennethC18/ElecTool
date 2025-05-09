@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+
 import javax.imageio.ImageIO;
 
 public class PassiveFilterInterface extends JFrame {
@@ -22,7 +24,8 @@ public class PassiveFilterInterface extends JFrame {
         setLocationRelativeTo(null);
 
         // Panel con la imagen de fondo
-        backgroundPanel = new PassiveFilterPanel("resources/RClowpass.png");
+        backgroundPanel = new PassiveFilterPanel("RClowpass.png");
+        
         backgroundPanel.setLayout(new BorderLayout());
         add(backgroundPanel, BorderLayout.CENTER);
 
@@ -121,8 +124,8 @@ public class PassiveFilterInterface extends JFrame {
 
         private void loadImage(String imagePath) {
             try {
-                File imageFile = new File(imagePath);
-                if (!imageFile.exists()) {
+            	InputStream imageFile = ResourceLoader.load(imagePath);
+                if (imageFile == null) {
                     throw new IOException("El archivo de imagen no existe: " + imagePath);
                 }
                 backgroundImage = ImageIO.read(imageFile);
@@ -137,7 +140,7 @@ public class PassiveFilterInterface extends JFrame {
         }
 
         public void updateImage(String filterType) {
-            String imagePath = filterType.equals("Pasa Bajas (L_P)") ? "resources/RClowpass.png" : "resources/RChighpass.png";
+            String imagePath = filterType.equals("Pasa Bajas (L_P)") ? "RClowpass.png" : "RChighpass.png";
             loadImage(imagePath);
             repaint();
         }
